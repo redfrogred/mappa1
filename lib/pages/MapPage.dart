@@ -40,7 +40,7 @@ class _MapPageState extends State<MapPage> {
     zoom: 13,
   );
 
-  static const String mapStyleJSON = "[{\"elementType\":\"geometry\",\"stylers\":[{\"color\":\"#242f3e\"}]},{\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#746855\"}]},{\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#242f3e\"}]},{\"featureType\":\"administrative.locality\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#d59563\"}]},{\"featureType\":\"poi\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#d59563\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry\",\"stylers\":[{\"color\":\"#263c3f\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6b9a76\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry\",\"stylers\":[{\"color\":\"#38414e\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#212a37\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#9ca5b3\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"geometry\",\"stylers\":[{\"color\":\"#746855\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#1f2835\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#f3d19c\"}]},{\"featureType\":\"transit\",\"elementType\":\"geometry\",\"stylers\":[{\"color\":\"#2f3948\"}]},{\"featureType\":\"transit.station\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#d59563\"}]},{\"featureType\":\"water\",\"elementType\":\"geometry\",\"stylers\":[{\"color\":\"#17263c\"}]},{\"featureType\":\"water\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#515c6d\"}]},{\"featureType\":\"water\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#17263c\"}]}]";
+  static const String mapStyleJSON = "[{\"featureType\":\"administrative.land_parcel\",\"elementType\":\"labels\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"labels.text\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.icon\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"transit\",\"stylers\":[{\"visibility\":\"off\"}]}]";
 
   // (this page) init and dispose
   @override
@@ -133,31 +133,44 @@ class _MapPageState extends State<MapPage> {
               )
             ],            
           ),
-          body: Column(
-            children:  [
-              Expanded(
-                flex: 1,
-                child: Center(
-                  child: GoogleMap(
-                    initialCameraPosition: _defaultCamera,
-                    onMapCreated: ( controller ) {
-                      myMapController = controller;
-                      setState(() {
-                      //_addMarker( 'Marker 1', currentLocation );
-                      _addMarker( 'Marker 2', currentLocation2 );
-                      _addMarker( 'Marker 3', currentLocation3 );                        
-                      });
-                      myMapController.setMapStyle( mapStyleJSON );                      
-                    },
-                    markers: _markers.values.toSet(),
-                    mapToolbarEnabled: false,
-                    //mapType: MapType.terrain,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    trafficEnabled: true,
-                  ),
-                ),
-              ),  
+          body: Stack(
+            children:  [ 
+              GoogleMap(
+                initialCameraPosition: _defaultCamera,
+                onMapCreated: ( controller ) {
+                  myMapController = controller;
+                  setState(() {
+                  //_addMarker( 'Marker 1', currentLocation );
+                  _addMarker( 'Marker 2', currentLocation2 );
+                  _addMarker( 'Marker 3', currentLocation3 );                        
+                  });
+                  myMapController.setMapStyle( mapStyleJSON );                      
+                },
+                markers: _markers.values.toSet(),
+                mapToolbarEnabled: false,
+                //mapType: MapType.terrain,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                //trafficEnabled: true,
+              ),
+              Positioned(
+                child: Container(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('( hud )'),
+                ))),
+              Positioned(
+                left: 0,
+                bottom: 10,
+                child: Container(
+                  color: Colors.transparent,
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: ElevatedButton(
+                      child: Text('START'),
+                      onPressed: () {},
+                    ),
+                  )
+                )),                
             ],
           ),
         ),
